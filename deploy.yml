@@ -1,0 +1,31 @@
+nama: Deploy Backend ke GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v2
+
+      - name: Instal dependensi
+        run: npm install
+
+      - name: Build dan deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          npm run build
+          mkdir -p public
+          cp server.js public/
+          cp package.json public/
+          git config --global user.name "suburrrr"
+          git config --global user.email "ainurrahmanhdyt@github.com"
+          git add .
+          git commit -m "Deploy backend ke GitHub Pages"
+          git push --force origin main:gh-pages
